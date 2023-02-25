@@ -6,6 +6,10 @@ hlinfo-utils是一些常用的java小工具集合。
 
 小巧玲珑，静态封装，快速使用
 
+# 分支与版本
+
+* hlinfo-utils分支，1.X版本，支持（Java EE）JDK1.8
+* hlinfo-utils-jakarta分支(本仓库)，2.X版本，支持（Jakarta EE）JDK17
 
 # 快速使用
 
@@ -18,8 +22,8 @@ hlinfo-utils是一些常用的java小工具集合。
 ``` xml
 <dependency>
     <groupId>net.hlinfo</groupId>
-    <artifactId>hlinfo-utils</artifactId>
-    <version>1.0.12</version>
+    <artifactId>hlinfo-utils-jakarta</artifactId>
+    <version>2.0.0</version>
 </dependency>
 ```
 

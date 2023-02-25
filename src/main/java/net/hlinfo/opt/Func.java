@@ -10,6 +10,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
 import java.net.URL;
@@ -454,7 +455,7 @@ public class Func {
      *            请求的req对象
      * @return 来源ip
      */
-    public static String getIpAddr(javax.servlet.http.HttpServletRequest request) {
+    public static String getIpAddr(jakarta.servlet.http.HttpServletRequest request) {
         if (request == null)
             return "0.0.0.0";
         String ip = request.getHeader("X-Forwarded-For");
@@ -612,7 +613,8 @@ public class Func {
 	public static <T> T map2obj(Class<T> cls, Map map){
 		T object = null;
 		try {
-			object = cls.newInstance();
+//			object = cls.newInstance();
+			object = cls.getConstructor().newInstance(null);
 		} catch (Exception e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
@@ -625,7 +627,7 @@ public class Func {
 		Field[] fields = object.getClass().getDeclaredFields();
 		//遍历数组
 		for(Field field : fields){
-			if(!field.isAccessible()){
+			if(!field.canAccess(object)){
 				field.setAccessible(true);
 			}
 			//赋值
@@ -1041,6 +1043,17 @@ public class Func {
         return !equals(s1,s2);
     }
     /**
+	 * 判断list是否为空
+	 * @param list list集合
+	 * @return 如果此list为 null 或者没有元素，则返回 true
+	 */
+	public static boolean listIsBlank(List<?> list) {
+		if (null == list || list.isEmpty()) {
+			return true;
+		}
+		return false;
+	}
+    /**
      * 检测URL地址是否能正常连接
      * @param url 需要测试的URL地址
      * @return 能正常连接返回true，否则返回false
@@ -1073,9 +1086,9 @@ public class Func {
 		if(object==null) {return map;}
 	    for (Field field : object.getClass().getDeclaredFields()){
 	        try {
-	        	boolean flag = field.isAccessible();
 	            field.setAccessible(true);
 	            Object o = field.get(object);
+	            boolean flag = field.canAccess(o);
 	            map.put(field.getName(), o);
 	            field.setAccessible(flag);
 	        } catch (Exception e) {
@@ -1645,7 +1658,7 @@ public class Func {
 		}
 		BigDecimal bdtotal = new BigDecimal(total+"");
 		BigDecimal bdsub = new BigDecimal(sub+"");
-		BigDecimal div = bdsub.divide(bdtotal,4,BigDecimal.ROUND_HALF_UP);
+		BigDecimal div = bdsub.divide(bdtotal,4,RoundingMode.HALF_UP);
 		BigDecimal rs = div.multiply(new BigDecimal("100"));
 		return rs.stripTrailingZeros().toPlainString()+"%";
 	}
@@ -1655,11 +1668,11 @@ public class Func {
      * @return 返回文本内容
      * @throws IOException IO异常
      */
-    public static String getRequestBody(javax.servlet.http.HttpServletRequest request) throws Exception {
+    public static String getRequestBody(jakarta.servlet.http.HttpServletRequest request) throws Exception {
         BufferedReader reader = null;
         StringBuffer sb = new StringBuffer();
         try {
-        	javax.servlet.ServletInputStream stream = request.getInputStream();
+        	jakarta.servlet.ServletInputStream stream = request.getInputStream();
             // 获取响应
             reader = new BufferedReader(new InputStreamReader(stream));
             String line;

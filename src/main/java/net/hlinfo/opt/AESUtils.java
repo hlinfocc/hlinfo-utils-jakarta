@@ -228,7 +228,6 @@ public class AESUtils {
 				result = new String(PKCS7Decode(resultByte)); 
 			}
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
     	return result;
